@@ -4,20 +4,12 @@ import { generateToken } from "../config/jwtTokens.js";
 import { generateRefreshToken } from "../config/refreshToken.js";
 import crypto from "crypto";
 
-const sayHello = async (req, res) => {
-  try {
-    res.json({ msg: "hello world" });
-  } catch (err) {
-    res.json(err);
-  }
-};
 const update = async (req, res) => {
   const { vendorId } = req.params;
   console.log(vendorId)
   try {
     const updated = req.body;
 
-    // Update the guard document in the database
     const updatedvendor = await Vendor.findByIdAndUpdate(vendorId, updated, {
       new: true,
     });
@@ -37,10 +29,10 @@ const update = async (req, res) => {
 const register = async (req, res) => {
   console.log("hres");
   try {
-    const { name, email, password, contact, address } = req.body;
+    const { name, mail, password, mob, add } = req.body;
 
     const existedUser = await Vendor.findOne({
-      $or: [{ name }, { email }],
+      $or: [{ name }, { mail }],
     });
 
     if (existedUser) {
@@ -51,11 +43,11 @@ const register = async (req, res) => {
     console.log(verificationToken);
     const user = new Vendor({
       name,
-      email,
+      mail,
       password,
-      contact,
+      mob,
       verificationToken,
-      address,
+      add,
     });
     await user.save();
     console.log(user);
@@ -130,18 +122,18 @@ const vendorList = async (req, res) => {
 const getparking = async (req, res) => {
   console.log("called")
   const { id } = req.params;
-  const vendors = await Vendor.findById(id).select('parkings').populate('parkings');
+  const vendors = await Vendor.findById(id).select('parking').populate('parking');
   res.json({ data: vendors });
 };
 
 import bcrypt from "bcrypt";
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
-  console.log(email, password);
+  const { mail, password } = req.body;
+  console.log(mail, password);
   try {
     // Find the vendor by email
-    const vendor = await Vendor.findOne({ email });
+    const vendor = await Vendor.findOne({ mail });
     console.log(vendor);
 
     // Check if password matches
@@ -170,9 +162,9 @@ const login = async (req, res) => {
     const data = {
       _id: vendor._id,
       name: vendor.name,
-      email: vendor.email,
-      contact: vendor.contact,
-      address: vendor.address,
+      mail: vendor.mail,
+      mob: vendor.mob,
+      add: vendor.add,
       token: generateToken(vendor._id),
     };
 
@@ -188,7 +180,6 @@ const login = async (req, res) => {
 export default login;
 
 export {
-  sayHello,
   login,
   register,
   getparking,

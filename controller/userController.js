@@ -78,7 +78,7 @@ const createEndUser = async (req, res) => {
     console.log(req.body);
 
     const existedUser = await EndUser.findOne({
-      $or: [{ Name }, { email }],
+      $or: [{ name }, { mail }],
     });
 
     if (existedUser) {
@@ -86,13 +86,13 @@ const createEndUser = async (req, res) => {
       return;
     }
     const verificationToken = crypto.randomBytes(20).toString("hex");
-    const user = new EndUser({
-      Name,
-      email,
+    const user = new User({
+      name,
+      mail,
       password,
-      phone,
+      mob,
       verificationToken,
-      address,
+      add,
     });
     await user.save();
     console.log("here");
@@ -108,19 +108,19 @@ const updateEndUserEmail = async (req, res) => {
   try {
     const { id } = req.params;
     const { newEmail } = req.body;
-    const user = await EndUser.findById(id);
+    const user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const existingUserWithEmail = await EndUser.findOne({ email: newEmail });
+    const existingUserWithEmail = await User.findOne({ email: newEmail });
 
     if (existingUserWithEmail && existingUserWithEmail._id.toString() !== id) {
       return res.status(400).json({ message: "Email already exists" });
     }
 
-    user.email = newEmail;
+    user.mail = newEmail;
     await user.save();
 
     res.status(200).json({ message: "Email updated successfully", user });
@@ -137,19 +137,19 @@ const sendOtp = async (req, res) => {
     console.log(id);
 
     const { newEmail } = req.body;
-    const user = await EndUser.findById(id);
+    const user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (user.email === newEmail) {
+    if (user.mail === newEmail) {
       return res
         .status(400)
         .json({ message: "New email is the same as the current email" });
     }
 
-    const existingUserWithEmail = await EndUser.findOne({ email: newEmail });
+    const existingUserWithEmail = await User.findOne({ email: newEmail });
     if (existingUserWithEmail) {
       return res.status(400).json({ message: "Email already exists" });
     }
@@ -159,7 +159,7 @@ const sendOtp = async (req, res) => {
     user.verificationToken = otp;
     await user.save();
 
-    sendOTPEmail(user.email, otp);
+    sendOTPEmail(user.mail, otp);
     console.log(otp);
     return res.status(200).json({ message: "OTP sent for email verification" });
   } catch (error) {
@@ -208,7 +208,7 @@ const verifyOTP = async (req, res) => {
     const { id } = req.params;
     const { otp } = req.body;
 
-    const user = await EndUser.findById(id);
+    const user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -298,24 +298,15 @@ function sendVerificationEmail(user) {
   });
 }
 
-const DeleteUser = async (req, res) => {
-  try {
-    const deletebooking = await EndUser.deleteMany();
 
-    res.json({ message: "deleted" });
-  } catch (error) {
-    console.error("Error getting booking by id :", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { mail, password } = req.body;
 
-    console.log(email);
+    console.log(mail);
 
-    const findUser = await EndUser.findOne({ email });
+    const findUser = await User.findOne({ mail });
 
     if (!findUser) {
       return res.status(404).json({ error: "User not found" });
@@ -327,7 +318,7 @@ const login = async (req, res) => {
 
     const refreshToken = await generateRefreshToken(findUser._id);
 
-    const updateUser = await EndUser.findByIdAndUpdate(
+    const updateUser = await User.findByIdAndUpdate(
       findUser._id,
       {
         refreshToken: refreshToken,
@@ -346,11 +337,11 @@ const login = async (req, res) => {
 
     const data = {
       _id: findUser._id,
-      Name: findUser.Name,
-      email: findUser.email,
-      phone: findUser.phone,
-      address: findUser.address,
-      vehicle_info: findUser.vehicle_info,
+      name: findUser.name,
+      mail: findUser.mail,
+      mob: findUser.mob,
+      add: findUser.add,
+      vehicle: findUser.vehicle,
       token: generateToken(findUser._id),
     };
 
