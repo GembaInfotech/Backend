@@ -10,10 +10,6 @@ import {
 
 bookingRoute.post("/", createABooking);
 bookingRoute.get("/", fetchingOnQuery);
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 bookingRoute.put("/status/:bookingId", updationOfStatus);
 bookingRoute.delete("/:bookingId", cancelBooking);
 bookingRoute.put("/time/:bookingId", updationOfTime);
