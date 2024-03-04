@@ -11,5 +11,4 @@ const connect = async () => {
         process.exit(1); // Exit the process with a failure code
     }
 };
-
 export {connect}
