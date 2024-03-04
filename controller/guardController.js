@@ -81,7 +81,7 @@ const getAGuard = async (req, res) => {
 const update = async (req, res) => {
   const { guardId } = req.params;
   try {
-    const updatedGuardData = req.body.data;
+    const updatedGuardData = req.body;
     console.log(guardId)
     console.log(req.body)
     const session = await mongoose.startSession(); // Start a MongoDB session
@@ -107,7 +107,7 @@ const update = async (req, res) => {
       // Commit the transaction
       await session.commitTransaction();
       session.endSession();
-
+    console.log(updatedGuard);
       res.json(updatedGuard);
     } catch (error) {
       await session.abortTransaction(); // Rollback the transaction if an error occurs
@@ -130,10 +130,13 @@ const register = async (req, res) => {
     const {
       name,
       mail,
+      
       password,
       adhar,
       mob,
       add,
+      
+     
       image,
     } = req.body;
     const session = await mongoose.startSession();
@@ -146,9 +149,9 @@ const register = async (req, res) => {
             mail,
             password,
             adhar,
-            parkingid: parkingid,
-            mob,
-            add,
+            parkingid: parkingId,
+            contactNumber,
+            address,
             image,
           },
         ],
@@ -158,8 +161,8 @@ const register = async (req, res) => {
       console.log("Guard registration successful:", guards);
 
       const newGuardId = guards[0]._id;
-      const updatedParkingDetail = await Parking.findOneAndUpdate(
-        { _id: parkingid },
+      const updatedParkingDetail = await ParkingDetail.findOneAndUpdate(
+        { _id: parkingId },
         { $set: { assg: newGuardId } },
         { new: true, session }
       );

@@ -100,7 +100,7 @@ function sendVerificationEmail(user) {
   console.log(user.verificationToken);
   const mailOptions = {
     from: "ayushguptass14@gmail.com",
-    to: user.email,
+    to: user.mail,
     subject: "Verify Your Email",
     html: `<p>Click <a href="http://localhost:7001/v1/api/vendor/verify/${user.verificationToken}">here</a> to verify your email.</p>`,
   };
@@ -122,7 +122,7 @@ const vendorList = async (req, res) => {
 const getparking = async (req, res) => {
   console.log("called")
   const { id } = req.params;
-  const vendors = await Vendor.findById(id).select('parking').populate('parking');
+  const vendors = await Vendor.findById(id).select('parkings').populate('parkings');
   res.json({ data: vendors });
 };
 

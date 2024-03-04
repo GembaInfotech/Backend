@@ -70,7 +70,7 @@ console.log(req.query);
   }
 };
 
-const getbookingByparkingid = async (req, res) => {
+const getbookingByparkingId = async (req, res) => {
   const { parkingid } = req.params;
   console.log(parkingid);
 
@@ -344,7 +344,7 @@ export {
  
   createABooking,
   fetchingOnQuery,
-  getbookingByparkingid,
+  getbookingByparkingId,
   updationOfStatus,
   cancelBooking,
   updationOfTime
