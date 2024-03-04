@@ -14,6 +14,9 @@ const guardSchema = new Schema({
     type: String,
     required: true,
   },
+  add:{
+    type:String
+  },
   adhar: {
     type: String,
   },
@@ -56,4 +59,4 @@ guardSchema.methods.createPasswordResetToken = async function () {
 };
 
 // Export the model
-export const Guard = mongoose.model("guard", guardSchema);
+export const Guard = mongoose.model("Guard", guardSchema);

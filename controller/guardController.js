@@ -3,11 +3,11 @@ import { Parking } from "../models/parking.js";
 import bcrypt from 'bcrypt'
 import mongoose from "mongoose";
 const login = async (req, res) => {
-  const { email, password } = req.body;
-console.log(email, password);
+  const { mail, password } = req.body;
+console.log(mail, password);
   try {
     // Find the user with the provided email
-    const findUser = await PGaurd.findOne({ email });
+    const findUser = await Guard.findOne({ mail });
 
     if (!findUser) {
       // If user not found, return 404 Not Found
@@ -46,7 +46,7 @@ const guardList = async (req, res) => {
     session.startTransaction(); // Begin a transaction
 
     try {
-      const guards = await PGaurd.find().session(session); // Fetch the guards within the transaction
+      const guards = await Guard.find().session(session); // Fetch the guards within the transaction
 
       // Commit the transaction
       await session.commitTransaction();
@@ -69,7 +69,7 @@ const getAGuard = async (req, res) => {
   const { guardId } = req.params;
   console.log(guardId)
   try {
-    const guards = await PGaurd.findById(guardId);
+    const guards = await Guard.findById(guardId);
     console.log(guards)
     res.json({ data: guards });
   } catch (error) {
@@ -87,13 +87,13 @@ const update = async (req, res) => {
     const session = await mongoose.startSession(); // Start a MongoDB session
     session.startTransaction();
    
-    const updatedGuard = await PGaurd.findByIdAndUpdate(guardId, updatedGuardData, {
+    const updatedGuard = await Guard.findByIdAndUpdate(guardId, updatedGuardData, {
       new: true,
     });
 
     try {
       // Update the guard document in the database within the transaction
-      const updatedGuard = await PGaurd.findByIdAndUpdate(guardId, updatedGuardData, {
+      const updatedGuard = await Guard.findByIdAndUpdate(guardId, updatedGuardData, {
         new: true,
         session: session
       });
@@ -123,32 +123,32 @@ const update = async (req, res) => {
 
 
 const register = async (req, res) => {
-  const { parkingId } = req.params;
-  console.log(parkingId);
+  const { parkingid } = req.params;
+  console.log(parkingid);
   console.log("Started registration process");
   try {
     const {
       name,
-      email,
+      mail,
       password,
       adhar,
-      contactNumber,
-      address,
+      mob,
+      add,
       image,
     } = req.body;
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      const guards = await PGaurd.create(
+      const guards = await Guard.create(
         [
           {
             name,
-            email,
+            mail,
             password,
             adhar,
-            parkingid: parkingId,
-            contactNumber,
-            address,
+            parkingid: parkingid,
+            mob,
+            add,
             image,
           },
         ],
@@ -158,8 +158,8 @@ const register = async (req, res) => {
       console.log("Guard registration successful:", guards);
 
       const newGuardId = guards[0]._id;
-      const updatedParkingDetail = await ParkingDetail.findOneAndUpdate(
-        { _id: parkingId },
+      const updatedParkingDetail = await Parking.findOneAndUpdate(
+        { _id: parkingid },
         { $set: { assg: newGuardId } },
         { new: true, session }
       );
