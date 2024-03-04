@@ -5,10 +5,10 @@ import mongoose from "mongoose";
 const getParkingdetail = async (req, res) => {
   const { id } = req.params;
   try {
-    const parkingDetail = await ParkingDetail.findById(id).populate(
-      "associateGuard"
+    const Parking = await Parking.findById(id).populate(
+      "guard"
     );
-    res.json({ data: parkingDetail });
+    res.json({ data: Parking });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -19,7 +19,7 @@ const getAParking = async (req, res) => {
   console.log(parkingId);
 
   try {
-    const vendor = await ParkingDetail.findById(parkingId)
+    const vendor = await Parking.findById(parkingId)
     res.json({ parkings: vendor });
   } catch (error) {
     res.json(error);
@@ -33,7 +33,7 @@ const deleteParking = async (req, res) => {
   console.log(parkingId);
 
   try {
-    await ParkingDetail.findByIdAndDelete(parkingId);
+    await Parking.findByIdAndDelete(parkingId);
     res.status(500).json({ message: "deleted" });
   } catch (error) {
     res.json(error);
@@ -46,7 +46,7 @@ const update= async (req, res)=>{
   const updatedData = req.body.updatedData;
 try{
 
-  const parking = await ParkingDetail.findByIdAndUpdate(id, updatedData, { new: true });
+  const parking = await Parking.findByIdAndUpdate(id, updatedData, { new: true });
 
   if (!parking) {
     return res.status(404).json({ message: 'Parking not found' });
@@ -86,7 +86,7 @@ const register = async (req, res) => {
     } = req.body;
 
     // Create a new ParkingDetail document
-    const parking = await ParkingDetail.create({
+    const parking = await Parking.create({
       pn,
       pa,
       city,
@@ -113,7 +113,7 @@ const register = async (req, res) => {
 
     // Find the user by ID and update its parkings array
     const updatedUser = await Vendor.findByIdAndUpdate(req.params.vendorId, {
-      $push: { parkings: newParkingId }
+      $push: { parking: newParkingId }
     });
 
     if (!updatedUser) {
@@ -143,7 +143,7 @@ const parkingList = async (req, res) => {
 
   try {
     // Find parking spots within the specified radius
-    const parkings = await ParkingDetail.find().session(session);
+    const parkings = await Parking.find().session(session);
 
     // Commit transaction
     await session.commitTransaction();
@@ -169,7 +169,7 @@ const parkingList = async (req, res) => {
 
 //   try {
 //     // Find parking spots within the specified radius
-//     const parkings = await ParkingDetail.find({
+//     const parkings = await Parking.find({
 //       find(vendorId);
 //     }).session(session);
 
