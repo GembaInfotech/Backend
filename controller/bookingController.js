@@ -45,22 +45,22 @@ console.log(bookingId);
 const fetchingOnQuery = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
-
+console.log(req.query);
   try {
-    const Booking = await Booking.find(req.query).session(session);
+    const booking = await Booking.find(req.query).session(session);
 
-    if (!Booking || Booking.length === 0) {
+    if (!booking || booking.length === 0) {
       await session.abortTransaction();
       session.endSession();
       return res.json({ data:[]});
     }
 
-    console.log('Found booking:', Booking);
+    console.log('Found booking:', booking);
 
     await session.commitTransaction();
     session.endSession();
 
-    res.json({ data: Booking });
+    res.json({ data: booking });
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
@@ -231,7 +231,7 @@ const createABooking = async (req, res) => {
       status,
       num,
       pn,
-      bp,
+      price,
       mail,
     } = req.body;
 
@@ -254,7 +254,7 @@ const createABooking = async (req, res) => {
         pn,
         num,
         status,
-        bp,
+        price
       });
 
       // Save the booking to the database within the transaction
@@ -317,7 +317,7 @@ const sendConfirmationEmail = (email, booking) => {
             <li>Checkout Time: ${new Date(
               booking.out
             ).toLocaleTimeString()}</li>
-            <li>Price: ${booking.bp}</li>
+            <li>Price: ${booking.price}</li>
         </ul>
         <p>Thank you for booking with us.</p>
     </body>

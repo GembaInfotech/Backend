@@ -3,6 +3,7 @@ const userRoute = express.Router();
 import {
   createEndUser,
   login,
+  verify,
   addvehicle,
   getVehiclesById,
   updateEndUserEmail,
@@ -19,6 +20,8 @@ userRoute.get("/getVehicles/:id", getVehiclesById);
 userRoute.post("/sendOtp/:id", sendOtp);
 userRoute.get("/get", getAllEndUsers);
 userRoute.post("/verify/:id", verifyOTP);
+userRoute.get("/token/:token", verify);
+
 userRoute.post("/update/:id", updateEndUserEmail);
 
 

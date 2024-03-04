@@ -73,13 +73,13 @@ const getAllEndUsers = async (req, res) => {
 const createEndUser = async (req, res) => {
   console.log("hres");
   try {
-    const { name, mail, password, mob, add } = req.body;
+    const { name, mail, password, mob } = req.body;
 
     console.log(req.body);
 
-    const existedUser = await EndUser.findOne({
-      $or: [{ name }, { mail }],
-    });
+    const existedUser = await User.findOne({
+        mail }
+    );
 
     if (existedUser) {
       res.status(205).json({ message: "Email Already Exists" });
@@ -92,10 +92,10 @@ const createEndUser = async (req, res) => {
       password,
       mob,
       verificationToken,
-      add,
+      
     });
     await user.save();
-    console.log("here");
+    console.log(user);
 
     sendVerificationEmail(user);
     res.status(201).json({ message: "User created. Verification email sent." });
@@ -114,7 +114,7 @@ const updateEndUserEmail = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const existingUserWithEmail = await User.findOne({ email: newEmail });
+    const existingUserWithEmail = await User.findOne({ mail: newEmail });
 
     if (existingUserWithEmail && existingUserWithEmail._id.toString() !== id) {
       return res.status(400).json({ message: "Email already exists" });
@@ -177,7 +177,7 @@ function generateOTP() {
   return OTP;
 }
 
-async function sendOTPEmail(email, otp) {
+async function sendOTPEmail(mail, otp) {
   try {
     const transporter = nodemailer.createTransport({
       // Configure your email provider here
@@ -190,7 +190,7 @@ async function sendOTPEmail(email, otp) {
 
     const mailOptions = {
       from: "ayushguptass14@gmail.com",
-      to: email,
+      to: mail,
       subject: "OTP for Email Verification",
       text: `Your OTP for email verification is: ${otp}`,
     };
@@ -232,7 +232,7 @@ const verifyOTP = async (req, res) => {
 
 const verify = async (req, res) => {
   const token = req.params.token;
-  const user = await EndUser.findOne({ verificationToken: token });
+  const user = await User.findOne({ verificationToken: token });
 
   if (!user) {
     return res.status(400).json({ error: "Invalid or expired token" });
@@ -241,7 +241,7 @@ const verify = async (req, res) => {
   user.verified = true;
   user.save();
 
-  res.redirect("http://localhost:5173/login/auth/vendor"); // Redirect to login page
+  res.redirect("http://localhost:5173/login"); // Redirect to login page
 };
 
 // Nodemailer configuration
@@ -256,7 +256,7 @@ const transporter = nodemailer.createTransport({
 function sendVerificationEmail(user) {
   const mailOptions = {
     from: "ayushguptass14@gmail.com",
-    to: user.email,
+    to: user.mail,
     subject: "Parkar-Verify Your Email",
     html: `<!DOCTYPE html>
       <html lang="en">
@@ -277,10 +277,10 @@ function sendVerificationEmail(user) {
       
               <!-- Content Section -->
               <div class="bg-white shadow-md rounded-lg px-8 py-6 mt-8">
-                  <h1 class="text-gray-800 text-lg font-semibold">Welcome ${user.Name}</h1>
+                  <h1 class="text-gray-800 text-lg font-semibold">Welcome ${user.name}</h1>
                   <p class="text-gray-700 mt-2">Thank you for creating an account with Parkar. </p>
                   <p>Please click the link below to activate your account.</p>
-                  <a href="http://localhost:7001/v1/api/vendor/verify/${user.verificationToken}" class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">Activate Account</a>
+                  <a href="http://localhost:7001/v1/api/user/token/${user.verificationToken}" class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">Activate Account</a>
               </div>
           </div>
       </body>
@@ -357,6 +357,7 @@ export {
   login,
   getVehiclesById,
   addvehicle,
+  verify, 
   updateEndUserEmail,
   getAllEndUsers,
   verifyOTP,

@@ -43,7 +43,7 @@ const deleteParking = async (req, res) => {
 
 const update= async (req, res)=>{
   const { id } = req.params;
-  const updatedData = req.body.updatedData;
+  const updatedData = req.body;
 try{
 
   const parking = await Parking.findByIdAndUpdate(id, updatedData, { new: true });
@@ -113,7 +113,7 @@ const register = async (req, res) => {
 
     // Find the user by ID and update its parkings array
     const updatedUser = await Vendor.findByIdAndUpdate(req.params.vendorId, {
-      $push: { parking: newParkingId }
+      $push: { parkings: newParkingId }
     });
 
     if (!updatedUser) {

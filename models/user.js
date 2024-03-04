@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
   pc: Number,
   lic:{
     type :String,
-    required:true
   },
   st: String,
   country: String,
