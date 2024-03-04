@@ -4,14 +4,6 @@ import { Booking } from "../models/booking.js";
 import mongoose from "mongoose";
 
 
-const sayHello = async (req, res) => {
-  try {
-    res.json({ msg: "hello world" });
-  } catch (err) {
-    res.json(err);
-  }
-};
-
 const updationOfStatus = async (req, res) => {
   console.log("call");
   const { status } = req.body;
@@ -19,7 +11,7 @@ const updationOfStatus = async (req, res) => {
   try {
     const { bookingId } = req.params;
 console.log(bookingId);
-    const booking = await BookingDetail.findById(bookingId);
+    const booking = await Booking.findById(bookingId);
 
     // Check if the booking exists
     if (!booking) {
@@ -55,20 +47,20 @@ const fetchingOnQuery = async (req, res) => {
   session.startTransaction();
 
   try {
-    const bookingDetail = await BookingDetail.find(req.query).session(session);
+    const Booking = await Booking.find(req.query).session(session);
 
-    if (!bookingDetail || bookingDetail.length === 0) {
+    if (!Booking || Booking.length === 0) {
       await session.abortTransaction();
       session.endSession();
       return res.json({ data:[]});
     }
 
-    console.log('Found booking:', bookingDetail);
+    console.log('Found booking:', Booking);
 
     await session.commitTransaction();
     session.endSession();
 
-    res.json({ data: bookingDetail });
+    res.json({ data: Booking });
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
@@ -78,13 +70,9 @@ const fetchingOnQuery = async (req, res) => {
   }
 };
 
-
-
-
-
-const getbookingByParkingId = async (req, res) => {
-  const { parkingId } = req.params;
-  console.log(parkingId);
+const getbookingByparkingid = async (req, res) => {
+  const { parkingid } = req.params;
+  console.log(parkingid);
 
   try {
     // Start a MongoDB session
@@ -92,14 +80,14 @@ const getbookingByParkingId = async (req, res) => {
     session.startTransaction();
 
     try {
-      // Find booking details by parkingId within the transaction
-      const bookingDetail = await BookingDetail.find({ parkingId: parkingId }).session(session);
+      // Find booking details by parkingid within the transaction
+      const Booking = await Booking.find({ parkingid: parkingid }).session(session);
 
       // Commit the transaction
       await session.commitTransaction();
       session.endSession();
 
-      res.json({ data: bookingDetail });
+      res.json({ data: Booking });
     } catch (error) {
       // Rollback the transaction if an error occurs
       await session.abortTransaction();
@@ -127,13 +115,13 @@ const getbookingByendUsergId = async (req, res) => {
 
     try {
       // Find booking details by endUserId within the transaction
-      const bookingDetail = await BookingDetail.find({ enserId: id }).session(session);
+      const Booking = await Booking.find({ enserId: id }).session(session);
 
       // Commit the transaction
       await session.commitTransaction();
       session.endSession();
 
-      res.json({ data: bookingDetail });
+      res.json({ data: Booking });
     } catch (error) {
       // Rollback the transaction if an error occurs
       await session.abortTransaction();
@@ -162,7 +150,7 @@ const cancelBooking = async (req, res) => {
 
     try {
       // Delete the specific booking details within the transaction
-      const cancelBooking = await BookingDetail
+      const cancelBooking = await Booking
         .findOneAndDelete({ _id: bookingId })
         .session(session);
 
@@ -201,7 +189,7 @@ const updationOfTime = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const booking = await BookingDetail.findById(id);
+    const booking = await Booking.findById(id);
 
     // Check if the booking exists
     if (!booking) {
@@ -236,19 +224,19 @@ const createABooking = async (req, res) => {
   try {
     console.log(req.body);
     const {
-      enserId,
-      parkingId,
-      timeIn,
-      timeOut,
+      userid,
+      parkingid,
+      In,
+      out,
       status,
-      CarNumber,
-      parkingName,
-      bookingPrice,
-      email,
+      num,
+      pn,
+      bp,
+      mail,
     } = req.body;
 
     // Input validation
-    if (!email || !validateEmail(email)) {
+    if (!mail || !validateEmail(mail)) {
       return res.status(400).json({ error: "Invalid email address" });
     }
 
@@ -258,15 +246,15 @@ const createABooking = async (req, res) => {
 
     try {
       // Create a new booking object
-      const newBooking = new BookingDetail({
-        enserId,
-        parkingId,
-        timeIn,
-        timeOut,
-        parkingName,
-        CarNumber,
+      const newBooking = new Booking({
+        userid,
+        parkingid,
+        In,
+        out,
+        pn,
+        num,
         status,
-        bookingPrice,
+        bp,
       });
 
       // Save the booking to the database within the transaction
@@ -277,7 +265,7 @@ const createABooking = async (req, res) => {
       session.endSession();
 
       // Send confirmation email to the user
-      sendConfirmationEmail(email, savedBooking);
+      sendConfirmationEmail(mail, savedBooking);
 
       // Send a success response with the saved booking
       res.status(201).json({ message: "Booking created successfully", data: savedBooking });
@@ -319,17 +307,17 @@ const sendConfirmationEmail = (email, booking) => {
         <p>Dear User, </p>
         <p>Your parking spot booking details:</p>
         <ul>
-            <li>Parking Name ${booking.parkingName}</li>
+            <li>Parking Name ${booking.pn}</li>
             <li> Date: ${new Date(
-              booking.timeOut
+              booking.out
             ).toLocaleDateString()}</li>
             <li>Arrival Time: ${new Date(
-              booking.timeIn
+              booking.In
             ).toLocaleTimeString()}</li>
             <li>Checkout Time: ${new Date(
-              booking.timeOut
+              booking.out
             ).toLocaleTimeString()}</li>
-            <li>Price: ${booking.bookingPrice}</li>
+            <li>Price: ${booking.bp}</li>
         </ul>
         <p>Thank you for booking with us.</p>
     </body>
@@ -347,16 +335,16 @@ const sendConfirmationEmail = (email, booking) => {
 
 
 // Function to validate email format
-function validateEmail(email) {
+function validateEmail(mail) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(String(email).toLowerCase());
+  return re.test(String(mail).toLowerCase());
 }
 
 export {
-  sayHello,
+ 
   createABooking,
   fetchingOnQuery,
-  getbookingByParkingId,
+  getbookingByparkingid,
   updationOfStatus,
   cancelBooking,
   updationOfTime
