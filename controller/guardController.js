@@ -84,7 +84,7 @@ const update = async (req, res) => {
 
 const register = async (req, res) => {
   const { parkingid } = req.params;
- 
+   console.log(parkingid);
     const {
       name,
       mail,
@@ -94,6 +94,7 @@ const register = async (req, res) => {
       add,
       image,
     } = req.body;
+    console.log(req.body);
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
@@ -114,12 +115,12 @@ const register = async (req, res) => {
       );
 
       const newGuardId = guard._id;
-      const updatedParkingDetail = await ParkingDetail.findOneAndUpdate(
+      const updatedParkingDetail = await Parking.findOneAndUpdate(
         { _id: parkingid },
         { $set: { assg: newGuardId } },
         { new: true, session }
       );
-
+   console.log(guard);
       await session.commitTransaction();
       session.endSession();
       res.json({ data: guard });

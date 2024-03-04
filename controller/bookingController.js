@@ -30,9 +30,9 @@ const fetchingOnQuery = async (req, res) => {
     const booking = await Booking.find(req.query).session(session);
 
     if (!booking || booking.length === 0) 
-      await session.abortTransaction();
+    {  await session.abortTransaction();
       session.endSession();
-      return res.json({ data:[]});
+      return res.json({ data:[]});}
     await session.commitTransaction();
     session.endSession();
     res.json({ data: booking });
