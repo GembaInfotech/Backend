@@ -7,101 +7,73 @@ import crypto from "crypto";
 
 const addvehicle = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   const { name, num, type } = req.body;
-
   try {
-    const endUser = await User.findById(id);
-    console.log(endUser);
-
-    if (!endUser) {
+    const data = await User.findById(id);
+    if (!data) {
       return res.status(404).json({ message: "End user not found" });
     }
-
-    endUser.vehicle.push({
+    data.vehicle.push({
       name,
       num,
       type,
     });
-
-    await endUser.save();
-
-    res.status(201).json({ message: "Vehicle added successfully", endUser });
+    await data.save();
+    res.status(201).json({ message: "Vehicle added successfully", data:data });
   } catch (error) {
-    console.error("Error adding vehicle:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
 const getVehiclesById = async (req, res) => {
   const { id } = req.params;
-
   try {
-    // Find the end user by ID
-    const endUser = await User.findById(id);
-
-    if (!endUser) {
+    const data = await User.findById(id);
+    if (!data) {
       return res.status(404).json({ message: "End user not found" });
     }
-
-    // Get the vehicles associated with the end user
-    const vehicles = endUser.vehicle;
-
-    res.status(200).json({ vehicles });
+    const vehicles = data.vehicle;
+    res.status(200).json({ data:vehicles });
   } catch (error) {
-    console.error("Error getting vehicles:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
 const getAllEndUsers = async (req, res) => {
   try {
-    // Find all end users
-    const endUsers = await User.find();
-
-    if (!endUsers || endUsers.length === 0) {
+    const data = await User.find();
+    if (!data || data.length === 0) {
       return res.status(404).json({ message: "No end users found" });
     }
-
-    res.status(200).json({ endUsers });
+    res.status(200).json({ data:data });
   } catch (error) {
-    console.error("Error getting end users:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
 const createEndUser = async (req, res) => {
-  console.log("hres");
   try {
     const { name, mail, password, mob } = req.body;
-
-    console.log(req.body);
-
     const existedUser = await User.findOne({
         mail }
     );
-
     if (existedUser) {
       res.status(205).json({ message: "Email Already Exists" });
       return;
     }
     const verificationToken = crypto.randomBytes(20).toString("hex");
-    const user = new User({
+    const data = new data({
       name,
       mail,
       password,
       mob,
       verificationToken,
-      
     });
-    await user.save();
-    console.log(user);
-
-    sendVerificationEmail(user);
+    await data.save();
+    sendVerificationEmail(data);
     res.status(201).json({ message: "User created. Verification email sent." });
   } catch (error) {
-    console.log(error);
-  }
+    res.json({error:error})  }
 };
 
 const updateEndUserEmail = async (req, res) => {
@@ -109,21 +81,16 @@ const updateEndUserEmail = async (req, res) => {
     const { id } = req.params;
     const { newEmail } = req.body;
     const user = await User.findById(id);
-
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
     const existingUserWithEmail = await User.findOne({ mail: newEmail });
-
     if (existingUserWithEmail && existingUserWithEmail._id.toString() !== id) {
       return res.status(400).json({ message: "Email already exists" });
     }
-
     user.mail = newEmail;
     await user.save();
-
-    res.status(200).json({ message: "Email updated successfully", user });
+    res.status(200).json({ message: "Email updated successfully", data:user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -133,33 +100,29 @@ const updateEndUserEmail = async (req, res) => {
 const sendOtp = async (req, res) => {
   try {
     const { id } = req.params;
-
-    console.log(id);
-
     const { newEmail } = req.body;
-    const user = await User.findById(id);
-
-    if (!user) {
+    const data = await User.findById(id);
+    if (!data) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (user.mail === newEmail) {
+    if (data.mail === newEmail) {
       return res
         .status(400)
         .json({ message: "New email is the same as the current email" });
     }
 
-    const existingUserWithEmail = await User.findOne({ email: newEmail });
+    const existingUserWithEmail = await User.findOne({ mail: newEmail });
     if (existingUserWithEmail) {
       return res.status(400).json({ message: "Email already exists" });
     }
 
     const otp = generateOTP();
 
-    user.verificationToken = otp;
-    await user.save();
+    data.verificationToken = otp;
+    await data.save();
 
-    sendOTPEmail(user.mail, otp);
+    sendOTPEmail(data.mail, otp);
     console.log(otp);
     return res.status(200).json({ message: "OTP sent for email verification" });
   } catch (error) {
@@ -180,7 +143,6 @@ function generateOTP() {
 async function sendOTPEmail(mail, otp) {
   try {
     const transporter = nodemailer.createTransport({
-      // Configure your email provider here
       service: "Gmail",
       auth: {
         user: "ayushguptass14@gmail.com",
@@ -207,22 +169,15 @@ const verifyOTP = async (req, res) => {
   try {
     const { id } = req.params;
     const { otp } = req.body;
-
-    const user = await User.findById(id);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const data = await User.findById(id);
+    if (!data) {
+      return res.status(404).json({ message: "data not found" });
     }
-
-    if (user.verificationToken !== otp) {
+    if (data.verificationToken !== otp) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
-
-    // If OTP is correct, update the user's email
-
-    user.verificationToken = null; // Clear the verification token
-    await user.save();
-
+    data.verificationToken = null; // Clear the verification token
+    await data.save();
     return res.status(200).json({ message: "OTP verfied successfully" });
   } catch (error) {
     console.error(error);
@@ -233,18 +188,14 @@ const verifyOTP = async (req, res) => {
 const verify = async (req, res) => {
   const token = req.params.token;
   const user = await User.findOne({ verificationToken: token });
-
   if (!user) {
     return res.status(400).json({ error: "Invalid or expired token" });
   }
-
   user.verified = true;
   user.save();
-
-  res.redirect("http://localhost:5173/login"); // Redirect to login page
+  res.redirect("http://localhost:5173/login");
 };
 
-// Nodemailer configuration
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
@@ -252,7 +203,6 @@ const transporter = nodemailer.createTransport({
     pass: "uvzmczkdrlbhqqak",
   },
 });
-
 function sendVerificationEmail(user) {
   const mailOptions = {
     from: "ayushguptass14@gmail.com",
@@ -303,23 +253,19 @@ function sendVerificationEmail(user) {
 const login = async (req, res) => {
   try {
     const { mail, password } = req.body;
-
-    console.log(mail);
-
-    const findUser = await User.findOne({ mail });
-
-    if (!findUser) {
+    const user = await User.findOne({ mail });
+    if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    if (!(await findUser.isPassWordMatched(password))) {
+    if (!(await user.isPassWordMatched(password))) {
       return res.status(401).json({ error: "Invalid password" });
     }
 
-    const refreshToken = await generateRefreshToken(findUser._id);
+    const refreshToken = await generateRefreshToken(user._id);
 
     const updateUser = await User.findByIdAndUpdate(
-      findUser._id,
+      user._id,
       {
         refreshToken: refreshToken,
       },
@@ -329,23 +275,22 @@ const login = async (req, res) => {
     if (!updateUser) {
       return res.status(500).json({ error: "Failed to update user" });
     }
-
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 72 * 60 * 60 * 1000,
     });
 
     const data = {
-      _id: findUser._id,
-      name: findUser.name,
-      mail: findUser.mail,
-      mob: findUser.mob,
-      add: findUser.add,
-      vehicle: findUser.vehicle,
-      token: generateToken(findUser._id),
+      _id: user._id,
+      name: user.name,
+      mail: user.mail,
+      mob: user.mob,
+      add: user.add,
+      vehicle: user.vehicle,
+      token: generateToken(user._id),
     };
 
-    res.json({ data });
+    res.json({ data:data });
   } catch (err) {
     console.error("Error in login:", err);
     res.status(500).json({ error: "Internal Server Error" });
