@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 import { generateToken } from "../config/jwtTokens.js";
 import { generateRefreshToken } from "../config/refreshToken.js";
 import crypto from "crypto";
+import { request } from "http";
 
 
 const addvehicle = async (req, res) => {
@@ -24,6 +25,41 @@ const addvehicle = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+const setDefaultVehicle = async (req, res) => {
+  const { id } = req.body;
+  const { def } = req.body;
+  try {
+    const { userid } = req.params;
+    const user = await User.findById(userid);
+    
+    if (!user) {
+      throw new Error('User not found');
+    }
+    
+    if (def) {
+      const hasDefaultVehicle = user.vehicle.some(vehicle => vehicle.def);
+      if (hasDefaultVehicle) {
+        // Clear the default status from the existing default vehicle
+        const existingDefaultVehicle = user.vehicle.find(vehicle => vehicle.def);
+        existingDefaultVehicle.def = false;
+      }
+    }
+    
+    const vehicle = user.vehicle.id(id);
+    if (!vehicle) {
+      throw new Error('Vehicle not found');
+    }
+    
+    vehicle.def = def;
+    
+    await user.save();
+    res.status(200).json({ message: "Vehicle status updated successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 
 const deletevehicle = async (req, res) => {
   const { userid } = req.params; 
@@ -270,41 +306,7 @@ function sendVerificationEmail(user) {
 }
 
 
-const setDefaultVehicle = async (req, res) => {
-  const { id, def } = req.body;
-  try {
-    const { userid } = req.params;
-   console.log(def);
-    const user = await User.findById(userid);
 
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    // Check if any vehicle is already set as default
-
-    if(def)
-    {const hasDefaultVehicle = user.vehicle.some(vehicle => vehicle.def);
-
-    if (hasDefaultVehicle) {
-      // If another vehicle is already set as default, send a response
-      return res.status(400).json({ error: 'Another vehicle is already set as default' });
-    }}
-
-    const vehicle = user.vehicle.id(id);
-
-    if (!vehicle) {
-      throw new Error('Vehicle not found');
-    }
-
-    vehicle.def = def;
-
-    await user.save();
-    res.status(200).json({ message: "Vehicle status updated successfully" });
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
 
 
 

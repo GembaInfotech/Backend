@@ -119,7 +119,7 @@ const createABooking = async (req, res) => {
       const savedBooking = await newBooking.save({ session });
       await session.commitTransaction();
       session.endSession();
-      sendConfirmationEmail(mail, savedBooking);
+      
       res.status(201).json({ message: "Booking created successfully", data: savedBooking });
     } catch (error) {
       await session.abortTransaction();
