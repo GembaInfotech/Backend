@@ -11,6 +11,7 @@ import {
   getAllEndUsers,
   verifyOTP,
   sendOtp,
+  setDefaultVehicle,
 } from "../controller/userController.js";
 
 
@@ -23,6 +24,7 @@ userRoute.post("/sendOtp/:id", sendOtp);
 userRoute.get("/get", getAllEndUsers);
 userRoute.post("/verify/:id", verifyOTP);
 userRoute.get("/token/:token", verify);
+userRoute.put("/setDefaultVehicle/:userid", setDefaultVehicle);
 
 userRoute.post("/update/:id", updateEndUserEmail);
 
