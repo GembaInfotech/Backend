@@ -111,11 +111,12 @@ const getparking = async (req, res) => {
 const login = async (req, res) => {
   const { mail, password } = req.body;
   try {
-    const vendor = await Vendor.findOne({ mail });
+    const vendor = await Vendor.findOne({ mail:mail });
     const isPasswordMatched = await bcrypt.compare(password, vendor.password);
     if (!isPasswordMatched) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
+   
     const refreshToken = await generateRefreshToken(vendor._id);
     await Vendor.findOneAndUpdate(
       { _id: vendor._id },
