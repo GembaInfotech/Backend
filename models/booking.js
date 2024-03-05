@@ -27,6 +27,8 @@ const bookingSchema = new mongoose.Schema({
   et: Number,
   num: String,
   price: Number,
+  cgst:Number,
+  sgst:Number,
   ep: Number,
   status: {
     type: String,

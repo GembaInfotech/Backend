@@ -95,6 +95,8 @@ const createABooking = async (req, res) => {
       num,
       pn,
       price,
+      cgst,
+      sgst,
       mail,
     } = req.body;
 
@@ -110,7 +112,9 @@ const createABooking = async (req, res) => {
         pn,
         num,
         status,
-        price
+        price,
+        cgst,
+        sgst
       });
       const savedBooking = await newBooking.save({ session });
       await session.commitTransaction();
