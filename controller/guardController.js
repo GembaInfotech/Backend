@@ -82,6 +82,7 @@ const update = async (req, res) => {
 };
 
 
+
 const register = async (req, res) => {
   const { parkingid } = req.params;
    console.log(parkingid);

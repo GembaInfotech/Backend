@@ -25,6 +25,26 @@ const addvehicle = async (req, res) => {
   }
 };
 
+const deletevehicle = async (req, res) => {
+  const { userid } = req.params; 
+  const{ id } =req.body;
+  try {
+    const data = await User.findByIdAndUpdate(
+      {_id: userid }, 
+      { $pull: { vehicle: { _id: id } } }, 
+      { new: true } 
+    );
+    if (!data) {
+      
+      return res.status(404).json({ message: "Vehicle not found" });
+    }
+    return res.status(200).json({ message: "Vehicle deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
 const getVehiclesById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -302,6 +322,7 @@ export {
   login,
   getVehiclesById,
   addvehicle,
+  deletevehicle,
   verify, 
   updateEndUserEmail,
   getAllEndUsers,

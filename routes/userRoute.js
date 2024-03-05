@@ -5,6 +5,7 @@ import {
   login,
   verify,
   addvehicle,
+  deletevehicle,
   getVehiclesById,
   updateEndUserEmail,
   getAllEndUsers,
@@ -16,6 +17,7 @@ import {
 userRoute.post("/login", login);
 userRoute.post("/register", createEndUser);
 userRoute.post("/addVehicle/:id", addvehicle);
+userRoute.delete("/deleteVehicle/:userid", deletevehicle);
 userRoute.get("/getVehicles/:id", getVehiclesById);
 userRoute.post("/sendOtp/:id", sendOtp);
 userRoute.get("/get", getAllEndUsers);
