@@ -30,6 +30,7 @@ const bookingSchema = new mongoose.Schema({
   cgst:Number,
   sgst:Number,
   ep: Number,
+  tp:Number,
   status: {
     type: String,
     enum: ["Incoming", "Parked", "Completed"],
