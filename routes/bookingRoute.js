@@ -12,6 +12,8 @@ bookingRoute.post("/", createABooking);
 bookingRoute.get("/", fetchingOnQuery);
 bookingRoute.put("/status/:bookingId", updationOfStatus);
 bookingRoute.delete("/:bookingId", cancelBooking);
+bookingRoute.delete("/:bookingId", cancelBooking);
+
 bookingRoute.put("/time/:bookingId", updationOfTime);
 
 export { bookingRoute };

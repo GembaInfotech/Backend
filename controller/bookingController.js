@@ -81,7 +81,7 @@ const updationOfTime = async (req, res) => {
 
 
 
-      
+
       .json({ message: "Booking time updated successfully",  data: booking });
   } catch (error) {
     console.error("Error updating booking time:", error);
@@ -190,6 +190,10 @@ function validateEmail(mail) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(String(mail).toLowerCase());
 }
+
+
+
+
 export {
   createABooking,
   fetchingOnQuery,
