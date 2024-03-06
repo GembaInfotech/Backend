@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 
 const updationOfStatus = async (req, res) => {
-  const { status } = req.body;
+  const { status , tp=0} = req.body;
   try {
     const { bookingId } = req.params;
     const booking = await Booking.findById(bookingId);
@@ -14,6 +14,7 @@ const updationOfStatus = async (req, res) => {
         .status(400)
         .json({ error: "Booking status is already completed" });
     booking.status = status;
+    booking.tp=tp;
     await booking.save();
     res
       .status(200)
@@ -77,6 +78,10 @@ const updationOfTime = async (req, res) => {
     await booking.save();
     res
       .time(200)
+
+
+
+      
       .json({ message: "Booking time updated successfully",  data: booking });
   } catch (error) {
     console.error("Error updating booking time:", error);
