@@ -34,8 +34,7 @@ app.use('/v1/api/guard', guardRoute);
 app.use('/v1/api/booking', bookingRoute);
 app.use('/v1/api/user', userRoute );
 app.use('/v1/api/queries', queriesRoute);
-// app.use(notFound);
-// app.use(errorHandler);
+
 app.listen( port , () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
