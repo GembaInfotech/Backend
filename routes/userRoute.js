@@ -13,13 +13,14 @@ import {
   sendOtp,
   setDefaultVehicle,
 } from "../controller/userController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 
 userRoute.post("/login", login);
 userRoute.post("/register", createEndUser);
 userRoute.post("/addVehicle/:id", addvehicle);
 userRoute.delete("/deleteVehicle/:userid", deletevehicle);
-userRoute.get("/getVehicles/:id", getVehiclesById);
+userRoute.get("/getVehicles/:id",  authMiddleware,  getVehiclesById);
 userRoute.post("/sendOtp/:id", sendOtp);
 userRoute.get("/get", getAllEndUsers);
 userRoute.post("/verify/:id", verifyOTP);
