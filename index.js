@@ -13,6 +13,7 @@ import { guardRoute } from './routes/guardRoute.js';
 import { bookingRoute } from './routes/bookingRoute.js';
 import { userRoute } from './routes/userRoute.js';
 import { queriesRoute } from './routes/queryRoute.js';
+import { razorpayRoute } from './routes/razorpayRoute.js';
 const app = express();
 const port = process.env.PORT 
 // const corsOptions = {
@@ -34,6 +35,7 @@ app.use('/v1/api/guard', guardRoute);
 app.use('/v1/api/booking', bookingRoute);
 app.use('/v1/api/user', userRoute );
 app.use('/v1/api/queries', queriesRoute);
+app.use('/v1/api/razorpay', razorpayRoute)
 
 app.listen( port , () => {
   console.log(`Server is running on http://localhost:${port}`);
