@@ -6,11 +6,31 @@ import crypto from "crypto";
 import { request } from "http";
 
 
+
+
+const userData = async(req,res)=>{
+  const {id} = req.user
+  
+  try {
+    console.log("34567");
+    const user = await User.findOne({ _id:id }); 
+    console.log(user);
+    res.json({"user":user})
+  } catch (error) {
+    console.log("error");
+    res.status(401).json({"error":error})
+  }
+    
+}
+
 const addvehicle = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.user;
+  console.log(req.user, req.body)
   const { name, num, type } = req.body;
   try {
+    console.log(name, num, type, id )
     const data = await User.findById(id);
+
     if (!data) {
       return res.status(404).json({ message: "End user not found" });
     }
@@ -27,11 +47,11 @@ const addvehicle = async (req, res) => {
 };
 
 const setDefaultVehicle = async (req, res) => {
-  const { id } = req.body;
-  const { def } = req.body;
+ const {vehicleId, def}=req.body;
   try {
-    const { userid } = req.params;
-    const user = await User.findById(userid);
+    console.log(req.body  )
+    const { id } = req.user;
+    const user = await User.findById(id);
     
     if (!user) {
       throw new Error('User not found');
@@ -46,7 +66,7 @@ const setDefaultVehicle = async (req, res) => {
       }
     }
     
-    const vehicle = user.vehicle.id(id);
+    const vehicle = user.vehicle.id(vehicleId);
     if (!vehicle) {
       throw new Error('Vehicle not found');
     }
@@ -62,7 +82,7 @@ const setDefaultVehicle = async (req, res) => {
 
 
 const deletevehicle = async (req, res) => {
-  const { userid } = req.params; 
+  const { userid } = req.user; 
   const{ id } =req.body;
   console.log(id , userid);
   try {
@@ -83,7 +103,7 @@ const deletevehicle = async (req, res) => {
 
 
 const getVehiclesById = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.user;
   try {
     const data = await User.findById(id);
     if (!data) {
@@ -130,7 +150,7 @@ const createEndUser = async (req, res) => {
     sendVerificationEmail(data);
     res.status(201).json({ message: "User created. Verification email sent." });
   } catch (error) {
-    res.json({error:error})  }
+    res.status(401).json({error:error})  }
 };
 
 const updateEndUserEmail = async (req, res) => {
@@ -341,16 +361,11 @@ const login = async (req, res) => {
     });
 
     const data = {
-      _id: user._id,
-      name: user.name,
-      mail: user.mail,
-      mob: user.mob,
-      add: user.add,
-      vehicle: user.vehicle,
+    
       token: generateToken(user._id),
     };
 
-    res.json({ data:data });
+    res.status(200).json({ token:data });
   } catch (err) {
     console.error("Error in login:", err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -369,4 +384,5 @@ export {
   verifyOTP,
   sendOtp,
   setDefaultVehicle,
+  userData
 };

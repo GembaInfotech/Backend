@@ -43,6 +43,26 @@ const fetchingOnQuery = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+const getBooking = async (req, res) => {
+  const {id} = req.user;
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    const booking = await Booking.find({userid:id}).session(session);
+
+    if (!booking || booking.length === 0) 
+    {  await session.abortTransaction();
+      session.endSession();
+      return res.json({ data:[]});}
+    await session.commitTransaction();
+    session.endSession();
+    res.json({ data: booking });
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 const cancelBooking = async (req, res) => {
   const { bookingId } = req.params;
   try {
@@ -90,7 +110,7 @@ const updationOfTime = async (req, res) => {
 };
 const createABooking = async (req, res) => {
   try {
-    console.log(req.body);
+    console.log(req.body.bookingData);
     const {
       userid,
       parkingid,
@@ -104,7 +124,7 @@ const createABooking = async (req, res) => {
       sgst,
       tp,
       mail,
-    } = req.body;
+    } = req.body.bookingData;
 
     if (!mail || !validateEmail(mail)) return res.status(400).json({ error: "Invalid email address" });
     const session = await mongoose.startSession();
@@ -199,5 +219,6 @@ export {
   fetchingOnQuery,
   updationOfStatus,
   cancelBooking,
-  updationOfTime
+  updationOfTime,
+  getBooking
 };

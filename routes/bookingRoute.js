@@ -6,10 +6,14 @@ import {
   updationOfStatus,
   updationOfTime,
   cancelBooking,
+  getBooking,
 } from "../controller/bookingController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 bookingRoute.post("/", createABooking);
 bookingRoute.get("/", fetchingOnQuery);
+bookingRoute.get("/userBookings", authMiddleware,  getBooking);
+
 bookingRoute.put("/status/:bookingId", updationOfStatus);
 bookingRoute.delete("/:bookingId", cancelBooking);
 bookingRoute.delete("/:bookingId", cancelBooking);
