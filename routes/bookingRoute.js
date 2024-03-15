@@ -10,7 +10,7 @@ import {
 } from "../controller/bookingController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 
-bookingRoute.post("/", createABooking);
+bookingRoute.post("/",authMiddleware,  createABooking);
 bookingRoute.get("/", fetchingOnQuery);
 bookingRoute.get("/userBookings", authMiddleware,  getBooking);
 

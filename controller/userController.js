@@ -104,6 +104,7 @@ const deletevehicle = async (req, res) => {
 
 const getVehiclesById = async (req, res) => {
   const { id } = req.user;
+  console.log(req.user)
   try {
     const data = await User.findById(id);
     if (!data) {
@@ -362,7 +363,7 @@ const login = async (req, res) => {
 
     const data = {
     
-      token: generateToken(user._id),
+      token: generateToken(user._id, user.mail),
     };
 
     res.status(200).json({ token:data });

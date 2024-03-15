@@ -111,8 +111,10 @@ const updationOfTime = async (req, res) => {
 const createABooking = async (req, res) => {
   try {
     console.log(req.body.bookingData);
+    const {mail , id } = req.user;
+    const userid=id
+
     const {
-      userid,
       parkingid,
       In,
       out,
@@ -123,7 +125,6 @@ const createABooking = async (req, res) => {
       cgst,
       sgst,
       tp,
-      mail,
     } = req.body.bookingData;
 
     if (!mail || !validateEmail(mail)) return res.status(400).json({ error: "Invalid email address" });
@@ -147,7 +148,7 @@ const createABooking = async (req, res) => {
       await session.commitTransaction();
       session.endSession();
       
-      res.status(201).json({ message: "Booking created successfully", data: savedBooking });
+      res.status(201).json({ message: "Booking created successfully" });
     } catch (error) {
       await session.abortTransaction();
       session.endSession();
