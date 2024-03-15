@@ -128,11 +128,7 @@ const login = async (req, res) => {
       maxAge: 72 * 60 * 60 * 1000, // 72 hours
     });
     const data = {
-      _id: vendor._id,
-      name: vendor.name,
-      mail: vendor.mail,
-      mob: vendor.mob,
-      add: vendor.add,
+      
       token: generateToken(vendor._id),
     };
     res.status(200).json({ data: data });

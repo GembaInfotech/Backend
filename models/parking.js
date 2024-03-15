@@ -86,6 +86,16 @@ const parkingSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Account", // Reference to the Account model
   },
+  currentstatus: {
+    type: String,
+    enum: ["Active", "Temporarily Inactive", "Inactive"],
+    default: "Inactive",
+  },
+  description :{
+    type:String,
+
+  },
+
   image: [String],
 });
 parkingSchema.index({ location: "2dsphere" });

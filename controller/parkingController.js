@@ -27,10 +27,10 @@ const getAParking = async (req, res) => {
 
 
 const deleteParking = async (req, res) => {
-  const { parkingId } = req.params;
+  const { id } = req.params;
   try {
-    await Parking.findByIdAndDelete(parkingId);
-    res.status(500).json({ message: "deleted" });
+    await Parking.findByIdAndDelete(id);
+    res.status(200).json({ message: "deleted" });
   } catch (error) {
     res.json(error);
   }
@@ -39,7 +39,8 @@ const deleteParking = async (req, res) => {
 
 const update= async (req, res)=>{
   const { id } = req.params;
-  const updatedData = req.body;
+  const updatedData = req.body.updatedData;
+  console.log(updatedData)
 try{
 
   const parking = await Parking.findByIdAndUpdate(id, updatedData, { new: true });
@@ -76,9 +77,10 @@ const register = async (req, res) => {
       cc,
       lc,
       assg
-    } = req.body;
+    } = req.body.ParkingData;
 
     // Create a new ParkingDetail document
+    console.log(req.body)
     const parking = await Parking.create({
       pn,
       pa,
@@ -100,9 +102,9 @@ const register = async (req, res) => {
       cc,
       assg
     });
-
+   const {id}= req.user;
     const newParkingId = parking._id;
-    const updatedUser = await Vendor.findByIdAndUpdate(req.params.vendorId, {
+    const updatedUser = await Vendor.findByIdAndUpdate(id, {
       $push: { parkings: newParkingId }
     });
 
@@ -110,6 +112,7 @@ const register = async (req, res) => {
       console.log("User not found");
       return res.status(404).json({ error: "User not found" });
     }
+    console.log(parking)
     res.status(201).json({ data:parking });
   } catch (error) {
     console.error("Error:", error);

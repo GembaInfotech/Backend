@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 
 import { User } from "../models/user.js";
+import { Vendor } from "../models/vendor.js";
 
 const authMiddleware = async (req, res, next) => {
   let token;
@@ -11,6 +12,26 @@ const authMiddleware = async (req, res, next) => {
       if (token) {
         const decoded = jwt.verify(token, "mysecret");
         const user = await User.findById(decoded?.id, decoded.mail);
+        req.user = user;
+        next();
+      } else {
+      }
+    } catch (error) {
+      res.json({ error: "not authorized" });
+    }
+  } else {
+    res.json({ error: "there is no token" });
+  }
+};
+const vendorAuth = async (req, res, next) => {
+  let token;
+
+  if (req?.headers?.authorization?.startsWith("Bearer")) {
+    token = req.headers.authorization.split(" ")[1];
+    try {
+      if (token) {
+        const decoded = jwt.verify(token, "mysecret");
+        const user = await Vendor.findById(decoded?.id);
         req.user = user;
         next();
       } else {
@@ -33,4 +54,4 @@ const isAdmin = async (req, res, next) => {
   }
 };
 
-export { authMiddleware, isAdmin };
+export { authMiddleware, isAdmin , vendorAuth};
