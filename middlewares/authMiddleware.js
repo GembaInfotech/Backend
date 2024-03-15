@@ -23,6 +23,7 @@ const authMiddleware = async (req, res, next) => {
     res.json({ error: "there is no token" });
   }
 };
+
 const vendorAuth = async (req, res, next) => {
   let token;
 
@@ -31,7 +32,7 @@ const vendorAuth = async (req, res, next) => {
     try {
       if (token) {
         const decoded = jwt.verify(token, "mysecret");
-        const user = await Vendor.findById(decoded?.id);
+        const user = await Vendor.findById(decoded?.id, decoded.mail);
         req.user = user;
         next();
       } else {
@@ -43,6 +44,8 @@ const vendorAuth = async (req, res, next) => {
     res.json({ error: "there is no token" });
   }
 };
+
+
 
 const isAdmin = async (req, res, next) => {
   const { email } = req.user;

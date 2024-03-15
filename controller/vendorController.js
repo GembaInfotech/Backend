@@ -6,8 +6,24 @@ import crypto from "crypto";
 import bcrypt from "bcrypt";
 
 
+
+
+const vendorData = async(req,res)=>{
+  const {id} = req.user
+  
+  try {
+    console.log("34567");
+    const vendor = await Vendor.findOne({ _id:id }); 
+    console.log(vendor);
+    res.json({"vendor":vendor})
+  } catch (error) {
+    console.log("error");
+    res.status(401).json({"error":error})
+  }
+    
+}
 const update = async (req, res) => {
-  const { vendorId } = req.params;
+  const { vendorId } = req.ser;
   try {
     const body = req.body;
     const data = await Vendor.findByIdAndUpdate(vendorId, body, {
@@ -103,7 +119,7 @@ const vendorList = async (req, res) => {
 };
 
 const getparking = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.user;
   const vendors = await Vendor.findById(id).select('parkings').populate('parkings');
   res.json({ data: vendors });
 };
@@ -140,6 +156,7 @@ const login = async (req, res) => {
 export default login;
 
 export {
+  vendorData,
   login,
   register,
   getparking,
