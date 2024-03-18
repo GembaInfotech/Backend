@@ -13,7 +13,7 @@ const vendorData = async(req,res)=>{
   
   try {
     console.log("34567");
-    const vendor = await Vendor.findOne({ _id:id }); 
+    const vendor = await Vendor.findOne({ _id:id }).select('name mail mob add'); 
     console.log(vendor);
     res.json({"vendor":vendor})
   } catch (error) {
@@ -23,12 +23,14 @@ const vendorData = async(req,res)=>{
     
 }
 const update = async (req, res) => {
-  const { vendorId } = req.ser;
+  const { id } = req.user;
   try {
-    const body = req.body;
-    const data = await Vendor.findByIdAndUpdate(vendorId, body, {
+    console.log(req.body.data)
+
+    const body = req.body.data;
+    const data = await Vendor.findByIdAndUpdate(id, body, {
       new: true,
-    });
+    }).select("name mob add mail");
     if (!data) {
       return res.status(404).json({ message: "Vendor not found" });
     }

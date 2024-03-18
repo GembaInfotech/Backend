@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Guard } from "./gaurd.js";
 
 // Define parking detail schema
 const parkingSchema = new mongoose.Schema({
@@ -80,7 +81,7 @@ const parkingSchema = new mongoose.Schema({
   },
   assg: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "guard", // Reference to the Guard model if needed
+    ref: "Guard", // Reference to the Guard model if needed
   },
   acc: {
     type: mongoose.Schema.Types.ObjectId,

@@ -100,7 +100,7 @@ const register = async (req, res) => {
     session.startTransaction();
     try {
       const guard = await Guard.create(
-        [
+        
           {
             name,
             mail,
@@ -110,20 +110,22 @@ const register = async (req, res) => {
             mob,
             add,
             image,
-          },
-        ],
-        { session }
+          }
+        
+       
       );
+      console.log(guard._id);
 
       const newGuardId = guard._id;
+      console.log(newGuardId)
       const updatedParkingDetail = await Parking.findOneAndUpdate(
         { _id: parkingid },
         { $set: { assg: newGuardId } },
         { new: true, session }
       );
-   console.log(guard);
       await session.commitTransaction();
       session.endSession();
+      console.log(updatedParkingDetail)
       res.json({ data: guard });
     } catch (error) {
       await session.abortTransaction();
