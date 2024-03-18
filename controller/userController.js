@@ -4,6 +4,7 @@ import { generateToken } from "../config/jwtTokens.js";
 import { generateRefreshToken } from "../config/refreshToken.js";
 import crypto from "crypto";
 import { request } from "http";
+import { log } from "console";
 
 
 
@@ -83,13 +84,12 @@ const setDefaultVehicle = async (req, res) => {
 
 
 const deletevehicle = async (req, res) => {
-  const { userid } = req.user; 
-  const{ id } =req.body;
-  console.log(id , userid);
+  const { id } = req.user; 
+  const{ vid } =req.params;
   try {
     const data = await User.findByIdAndUpdate(
-      {_id: userid }, 
-      { $pull: { vehicle: { _id: id } } }, 
+      {_id: id }, 
+      { $pull: { vehicle: { _id: vid } } }, 
       { new: true } 
     );
     if (!data) {
@@ -105,7 +105,7 @@ const deletevehicle = async (req, res) => {
 
 const getVehiclesById = async (req, res) => {
   const { id } = req.user;
-  console.log(req.user)
+  // console.log(req.user)
   try {
     const data = await User.findById(id);
     if (!data) {

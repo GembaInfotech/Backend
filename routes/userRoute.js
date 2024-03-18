@@ -20,7 +20,7 @@ userRoute.get("/userData",authMiddleware, userData )
 userRoute.post("/login", login);
 userRoute.post("/register", createEndUser);
 userRoute.post("/addVehicle",authMiddleware, addvehicle);
-userRoute.delete("/deleteVehicle",authMiddleware, deletevehicle);
+userRoute.delete("/vehicle/:vid",authMiddleware, deletevehicle);
 userRoute.get("/getVehicles",  authMiddleware,  getVehiclesById);
 userRoute.post("/sendOtp/:id", sendOtp);
 userRoute.get("/get", getAllEndUsers);

@@ -5,7 +5,7 @@ import { Vendor } from "../models/vendor.js";
 
 const authMiddleware = async (req, res, next) => {
   let token;
-
+    console.log(req.headers)
   if (req?.headers?.authorization?.startsWith("Bearer")) {
     token = req.headers.authorization.split(" ")[1];
     try {
