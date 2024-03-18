@@ -15,7 +15,7 @@ vendorRoute.get("/vendorData",vendorAuth, vendorData )
 
 vendorRoute.get("/getparking",vendorAuth, getparking);
 vendorRoute.get("/verify/:token", verify);
-vendorRoute.post("/login", login);
+vendorRoute.post("/login",  login);
 vendorRoute.put("/",vendorAuth, update);
 vendorRoute.post("/register", register);
 vendorRoute.get("", vendorList);

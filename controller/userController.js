@@ -25,16 +25,17 @@ const userData = async(req,res)=>{
 
 const addvehicle = async (req, res) => {
   const { id } = req.user;
-  console.log(req.user, req.body)
-  const { name, num, type } = req.body;
+
+  const { name, num, type } = req.body.formData;
   try {
-    console.log(name, num, type, id )
+    // console.log(name, num, type, id )
     const data = await User.findById(id);
+    console.log(data);
 
     if (!data) {
       return res.status(404).json({ message: "End user not found" });
     }
-    data.vehicle.push({
+   data.vehicle.push({
       name,
       num,
       type,
