@@ -134,7 +134,7 @@ const createEndUser = async (req, res) => {
   try {
     console.log("check............");
     console.log(req.body);
-    const { name, mail, password, mob } = req.body;
+    const { name, mail, password, mob } = req.body.values;
     console.log(name);
     const existedUser = await User.findOne({
         mail }
@@ -151,7 +151,7 @@ const createEndUser = async (req, res) => {
       mob,
       verificationToken,
     });
-    console.log("fxghjkl");
+    console.log(data);
     await data.save();
     console.log("dfghjk");
     sendVerificationEmail(data);
@@ -335,10 +335,6 @@ function sendVerificationEmail(user) {
 }
 
 
-
-
-
-
 const login = async (req, res) => {
   try {
     const { mail, password } = req.body;
@@ -349,6 +345,9 @@ const login = async (req, res) => {
 
     if (!(await user.isPassWordMatched(password))) {
       return res.status(401).json({ error: "Invalid password" });
+    }
+    if(!user.verfied){
+      return res.status(405).json({ error: "Please, Verify Your email" });
     }
 
     const refreshToken = await generateRefreshToken(user._id);

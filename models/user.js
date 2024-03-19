@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
   st: String,
   country: String,
   verificationToken: String,
+  verfied:{
+    type:Boolean,
+    default:false
+  },
   vehicle: [
     {
       name: {
