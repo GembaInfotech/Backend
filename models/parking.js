@@ -68,13 +68,13 @@ const parkingSchema = new mongoose.Schema({
   },
 
  
-  lc: {
+  location: {
     type: {
       type: String,
       enum: ["Point"], 
       required: true,
     },
-    cord: {
+    coordinates: {
       type: [Number],
       required: true,
     },

@@ -123,29 +123,36 @@ const register = async (req, res) => {
 
 
 const parkingList = async (req, res) => {
-  const { lat, long, radius } = req.params;
-  const lati = parseFloat(lat);
-  const lng = parseFloat(long);
-  const radiusInMeters = parseInt(radius); // Assuming radius is in meters
+  
 
-  const session = await mongoose.startSession();
-  session.startTransaction();
 
-  try {
-    const parkings = await Parking.find({
-      location: {
-        $geoWithin: {
-          $centerSphere: [[lng, lati], radiusInMeters / 6378.1] // Earth's radius in km
+  try{
+
+    const { lat, long } = req.params;
+const lati = parseFloat(lat);
+const lng = parseFloat(long);
+console.log(lat, long)
+const radius = 10000; // 100 meters radius
+
+const parkings = await Parking.find({
+    location: {
+        $near: {
+            $geometry: {
+                type: "Point",
+                coordinates : [lng, lati] // Note: MongoDB expects coordinates in [longitude, latitude] format
+            },
+            $maxDistance: radius
         }
-      }
-    }).session(session);
-    
-    await session.commitTransaction();
-    session.endSession();
-    return res.json({ data: parkings });
+    }
+
+}
+  
+  );
+  console.log(parkings);
+
+  return res.json({"data":parkings})
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
+   
     console.error("Error fetching parking spots:", error);
     return res.status(500).json({ message: "Server error" });
   }
