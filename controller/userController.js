@@ -132,7 +132,10 @@ const getAllEndUsers = async (req, res) => {
 
 const createEndUser = async (req, res) => {
   try {
+    console.log("check............");
+    console.log(req.body);
     const { name, mail, password, mob } = req.body;
+    console.log(name);
     const existedUser = await User.findOne({
         mail }
     );
@@ -141,15 +144,18 @@ const createEndUser = async (req, res) => {
       return;
     }
     const verificationToken = crypto.randomBytes(20).toString("hex");
-    const data = new data({
+    const data = new User({
       name,
       mail,
       password,
       mob,
       verificationToken,
     });
+    console.log("fxghjkl");
     await data.save();
+    console.log("dfghjk");
     sendVerificationEmail(data);
+    console.log("dsfghjjhgf");
     res.status(201).json({ message: "User created. Verification email sent." });
   } catch (error) {
     res.status(401).json({error:error})  }
@@ -279,10 +285,11 @@ const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
     user: "ayushguptass14@gmail.com",
-    pass: "uvzmczkdrlbhqqak",
+    pass: "itcyffmwyptpjhbt",
   },
 });
 function sendVerificationEmail(user) {
+  console.log("", user )
   const mailOptions = {
     from: "ayushguptass14@gmail.com",
     to: user.mail,
