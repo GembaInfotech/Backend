@@ -75,7 +75,7 @@ const register = async (req, res) => {
       subamt,
       lm,
       cc,
-      lc,
+      location,
       assg
     } = req.body.ParkingData;
 
@@ -98,7 +98,7 @@ const register = async (req, res) => {
       subc,
       subamt,
       lm,
-      lc,
+      location,
       cc,
       assg
     });
@@ -131,8 +131,8 @@ const parkingList = async (req, res) => {
     const { lat, long } = req.params;
 const lati = parseFloat(lat);
 const lng = parseFloat(long);
-console.log(lat, long)
-const radius = 10000; // 100 meters radius
+console.log(lng, lati)
+const radius = 100000; // 100 meters radius
 
 const parkings = await Parking.find({
     location: {
