@@ -346,7 +346,7 @@ const login = async (req, res) => {
     if (!(await user.isPassWordMatched(password))) {
       return res.status(401).json({ error: "Invalid password" });
     }
-    if(!user.verfied){
+    if(!user.verified){
       return res.status(405).json({ error: "Please, Verify Your email" });
     }
 
