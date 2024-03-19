@@ -316,7 +316,7 @@ function sendVerificationEmail(user) {
                   <h1 class="text-gray-800 text-lg font-semibold">Welcome ${user.name}</h1>
                   <p class="text-gray-700 mt-2">Thank you for creating an account with Parkar. </p>
                   <p>Please click the link below to activate your account.</p>
-                  <a href="http://localhost:7001/v1/api/user/token/${user.verificationToken}" class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">Activate Account</a>
+                  <a href="http://localhost:7001/v1/api/User/token/${user.verificationToken}" class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">Activate Account</a>
               </div>
           </div>
       </body>

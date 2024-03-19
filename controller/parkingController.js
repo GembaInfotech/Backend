@@ -126,12 +126,20 @@ const parkingList = async (req, res) => {
   const { lat, long, radius } = req.params;
   const lati = parseFloat(lat);
   const lng = parseFloat(long);
-  console.log(lat);
+  const radiusInMeters = parseInt(radius); // Assuming radius is in meters
+
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    const parkings = await Parking.find().session(session);
+    const parkings = await Parking.find({
+      location: {
+        $geoWithin: {
+          $centerSphere: [[lng, lati], radiusInMeters / 6378.1] // Earth's radius in km
+        }
+      }
+    }).session(session);
+    
     await session.commitTransaction();
     session.endSession();
     return res.json({ data: parkings });
