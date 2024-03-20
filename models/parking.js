@@ -99,7 +99,7 @@ const parkingSchema = new mongoose.Schema({
 
   image: [String],
 });
-parkingSchema.index({ location: "2dsphere" });
+parkingSchema.index({ lc: "2dsphere" }); // Indexing the lc field for geospatial queries
 
 // Create ParkingDetail model
 export const Parking = mongoose.model(

@@ -122,6 +122,7 @@ const register = async (req, res) => {
 
 
 
+<<<<<<< Updated upstream
 const parkingList = async (req, res) => {
   
 
@@ -153,12 +154,45 @@ const parkings = await Parking.find({
   return res.json({"data":parkings})
   } catch (error) {
    
+=======
+const parkingList = async (req,res) => {
+  const {lat, long, radius} = req.params;
+  if (!lat || !long || !radius) {
+    throw new Error('Latitude, longitude, and radius must be provided');
+  }
+
+  const latFloat = parseFloat(lat);
+  const longFloat = parseFloat(long);
+  const radiusInt = parseInt(radius);
+
+  if (isNaN(latFloat) || isNaN(longFloat) || isNaN(radiusInt)) {
+    throw new Error('Latitude, longitude, and radius must be valid numbers');
+  }
+
+  const radiusInMeters = radiusInt * 1000; // Convert radius to meters
+  const coordinates = [longFloat, latFloat]; // Longitude, Latitude format
+   console.log(coordinates, radiusInt)
+  try {
+    // Using $near operator to find parking spots near the specified coordinates
+    const parkings = await Parking.find({
+      lc: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            cord: coordinates
+          },
+          $maxDistance: radiusInMeters
+        }
+      }
+    });
+
+    return res.json(parkings);
+  } catch (error) {
+>>>>>>> Stashed changes
     console.error("Error fetching parking spots:", error);
-    return res.status(500).json({ message: "Server error" });
+    return []; // Return an empty array in case of an error
   }
 };
-
-
 
 export {
   parkingList,
