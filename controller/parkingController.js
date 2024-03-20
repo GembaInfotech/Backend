@@ -122,39 +122,6 @@ const register = async (req, res) => {
 
 
 
-<<<<<<< Updated upstream
-const parkingList = async (req, res) => {
-  
-
-
-  try{
-
-    const { lat, long } = req.params;
-const lati = parseFloat(lat);
-const lng = parseFloat(long);
-console.log(lng, lati)
-const radius = 100000; // 100 meters radius
-
-const parkings = await Parking.find({
-    location: {
-        $near: {
-            $geometry: {
-                type: "Point",
-                coordinates : [lng, lati] // Note: MongoDB expects coordinates in [longitude, latitude] format
-            },
-            $maxDistance: radius
-        }
-    }
-
-}
-  
-  );
-  console.log(parkings);
-
-  return res.json({"data":parkings})
-  } catch (error) {
-   
-=======
 const parkingList = async (req,res) => {
   const {lat, long, radius} = req.params;
   if (!lat || !long || !radius) {
@@ -188,7 +155,6 @@ const parkingList = async (req,res) => {
 
     return res.json(parkings);
   } catch (error) {
->>>>>>> Stashed changes
     console.error("Error fetching parking spots:", error);
     return []; // Return an empty array in case of an error
   }
