@@ -148,7 +148,7 @@ const createABooking = async (req, res) => {
       await session.commitTransaction();
       session.endSession();
       
-      res.status(201).json({ message: "Booking created successfully" });
+      res.status(201).json({ "success": true });
     } catch (error) {
       await session.abortTransaction();
       session.endSession();

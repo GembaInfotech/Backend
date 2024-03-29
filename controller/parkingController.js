@@ -123,21 +123,15 @@ const register = async (req, res) => {
 
 
 const parkingList = async (req, res) => {
-  const { lat, long, radius } = req.params;
-  const lati = parseFloat(lat);
-  const lng = parseFloat(long);
-  console.log(lat);
-  const session = await mongoose.startSession();
-  session.startTransaction();
+  // const { lat, long, radius } = req.params;
+  // const lati = parseFloat(lat);
+  // const lng = parseFloat(long);
+  // console.log(lat);
 
   try {
-    const parkings = await Parking.find().session(session);
-    await session.commitTransaction();
-    session.endSession();
-    return res.json({ data: parkings });
+    const parkings = await Parking.find();
+    return res.json({ parkings: parkings });
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
     console.error("Error fetching parking spots:", error);
     return res.status(500).json({ message: "Server error" });
   }
