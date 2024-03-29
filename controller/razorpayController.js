@@ -29,10 +29,10 @@ const order  = async (req, res) => {
         const order = await razorpayInstance.orders.create(options);
 
         if (!order) {
-            return res.status(500).send("Error creating order");
+            return res.status(500).json({message:"Order not created", success :false});
         }
 
-        res.json(order);
+        res.status(200).json({order, success:true});
     } catch (error) {
         console.log(error);
         res.status(500).send("Error");
@@ -41,6 +41,7 @@ const order  = async (req, res) => {
 
 const validate = async(req, res)=>{
     const {razorpay_order_id, razorpay_payment_id, razorpay_signature} =req.body;
+    console.log(req.body);
     const sha = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET);
     sha.update(`${razorpay_order_id}|${razorpay_payment_id}`)
     const digest = sha.digest("hex");
