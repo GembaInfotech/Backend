@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import express from "express";
 import { Booking } from "../models/booking.js";
 import mongoose from "mongoose";
-
+import razorpay from "../config/razorpayClient.js"
 
 const updationOfStatus = async (req, res) => {
   const { status , tp=0} = req.body;
@@ -147,8 +147,8 @@ const createABooking = async (req, res) => {
       const savedBooking = await newBooking.save({ session });
       await session.commitTransaction();
       session.endSession();
-      
-      res.status(201).json({ "success": true });
+       console.log("done ere")
+      res.status(201).json({ "booking":savedBooking});
     } catch (error) {
       await session.abortTransaction();
       session.endSession();
@@ -212,6 +212,47 @@ function validateEmail(mail) {
   return re.test(String(mail).toLowerCase());
 }
 
+ 
+const createPaymentLink = async (req, res) => {
+     console.log(req.params.id)
+  
+    console.log("created")
+  try {
+    console.log("dsfffffffffffffffffffffffffffff")
+      
+      const order = await Booking.findById(req.params.id);
+      const paymentLinkRequest = {
+        amount:  100000,
+        currency: 'INR',
+       
+       
+        reminder_enable: true,
+        // callback_url: `http://localhost:5174/profile/bookings`,
+        callback_method: 'get',
+      };
+
+      const paymentLink = await razorpay.paymentLink.create(paymentLinkRequest);
+  
+      const paymentLinkId = paymentLink.id;
+      const payment_link_url = paymentLink.short_url;
+  
+      console.log("orders")
+
+  
+      // Return the payment link URL and ID in the response
+      const resData = {
+        paymentLinkId: paymentLinkId,
+        payment_link_url,
+      };
+      res.json({data:resData})
+    } catch (error) {
+      console.error('Error creating payment link:', error);
+res.json(error)
+    }
+
+
+}
+
 
 
 
@@ -221,5 +262,6 @@ export {
   updationOfStatus,
   cancelBooking,
   updationOfTime,
-  getBooking
+  getBooking,
+  createPaymentLink
 };

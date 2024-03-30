@@ -7,6 +7,7 @@ import {
   updationOfTime,
   cancelBooking,
   getBooking,
+  createPaymentLink,
 } from "../controller/bookingController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 
@@ -19,5 +20,7 @@ bookingRoute.delete("/:bookingId", cancelBooking);
 bookingRoute.delete("/:bookingId", cancelBooking);
 
 bookingRoute.put("/time/:bookingId", updationOfTime);
+bookingRoute.post("/payments/:id", createPaymentLink);
+
 
 export { bookingRoute };
