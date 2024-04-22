@@ -99,9 +99,6 @@ const updationOfTime = async (req, res) => {
     res
       .time(200)
 
-
-
-
       .json({ message: "Booking time updated successfully",  data: booking });
   } catch (error) {
     console.error("Error updating booking time:", error);
@@ -238,8 +235,6 @@ const createPaymentLink = async (req, res) => {
   
       console.log("orders")
 
-  
-      // Return the payment link URL and ID in the response
       const resData = {
         paymentLinkId: paymentLinkId,
         payment_link_url,
