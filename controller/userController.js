@@ -281,7 +281,7 @@ const verify = async (req, res) => {
   }
   user.verified = true;
   user.save();
-  res.redirect("https://backend-2-v1ta.onrender.com/login");
+  res.redirect("https://parkaruser2.netlify.app/#/login");
 };
 
 const transporter = nodemailer.createTransport({
