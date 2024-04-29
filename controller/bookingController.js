@@ -160,12 +160,12 @@ const sendConfirmationEmail = (email, booking) => {
   const transporter = nodemailer.createTransport({
     service: "Gmail", 
     auth: {
-      user: "ayushguptass14@gmail.com", 
-      pass: "uvzmczkdrlbhqqak", 
+      user: "prashantrana9516@gmail.com", 
+      pass: "qqjsatrjwvbynknu", 
     },
   });
   const mailOptions = {
-    from: "ayushguptass14@gmail.com",
+    from: "prashantrana9516@gmail.com",
     to: email,
     subject: "Booking Confirmation",
     html: ` <!DOCTYPE html>

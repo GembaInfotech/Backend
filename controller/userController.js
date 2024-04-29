@@ -134,15 +134,18 @@ const createEndUser = async (req, res) => {
   try {
     console.log("check............");
     console.log(req.body);
-    const { name, mail, password, mob } = req.body.values;
+    const { name, mail, password, mob } = req.body;
     console.log(name);
     const existedUser = await User.findOne({
         mail }
     );
+    console.log("testing.....1");
     if (existedUser) {
+      console.log("testing.....3");
       res.status(205).json({ message: "Email Already Exists" });
       return;
     }
+    console.log("testing....2");
     const verificationToken = crypto.randomBytes(20).toString("hex");
     const data = new User({
       name,
@@ -151,7 +154,7 @@ const createEndUser = async (req, res) => {
       mob,
       verificationToken,
     });
-    console.log(data);
+    console.log("data", data);
     await data.save();
     console.log("dfghjk");
     sendVerificationEmail(data);
@@ -284,14 +287,14 @@ const verify = async (req, res) => {
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-    user: "ayushguptass14@gmail.com",
-    pass: "itcyffmwyptpjhbt",
+    user: "prashantrana9516@gmail.com",
+    pass: "qqjsatrjwvbynknu",
   },
 });
 function sendVerificationEmail(user) {
   console.log("", user )
   const mailOptions = {
-    from: "ayushguptass14@gmail.com",
+    from: "prashantrana9516@gmail.com",
     to: user.mail,
     subject: "Parkar-Verify Your Email",
     html: `<!DOCTYPE html>
@@ -323,9 +326,14 @@ function sendVerificationEmail(user) {
       
       </html>
       `,
+
+      
   };
 
+  console.log("email testing");
+
   transporter.sendMail(mailOptions, (error, info) => {
+    console.log("testing....");
     if (error) {
       console.log(error);
     } else {
