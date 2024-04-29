@@ -122,7 +122,7 @@ const createABooking = async (req, res) => {
       cgst,
       sgst,
       tp,
-    } = req.body.bookingData;
+    } = req.body;
 
     if (!mail || !validateEmail(mail)) return res.status(400).json({ error: "Invalid email address" });
     const session = await mongoose.startSession();
@@ -141,7 +141,9 @@ const createABooking = async (req, res) => {
         sgst,
         tp
       });
+      console.log(newBooking);
       const savedBooking = await newBooking.save({ session });
+      sendConfirmationEmail(mail, newBooking)
       await session.commitTransaction();
       session.endSession();
        console.log("done ere")
@@ -156,6 +158,8 @@ const createABooking = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
 const sendConfirmationEmail = (email, booking) => {
   const transporter = nodemailer.createTransport({
     service: "Gmail", 
@@ -197,7 +201,7 @@ const sendConfirmationEmail = (email, booking) => {
     </body>
     </html>`,
   };
-  tansporter.sendMail(mailOptions, (error, info) => {
+  transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.error("Error sending email:", error);
     }
