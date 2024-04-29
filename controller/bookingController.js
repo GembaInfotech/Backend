@@ -122,7 +122,7 @@ const createABooking = async (req, res) => {
       cgst,
       sgst,
       tp,
-    } = req.body;
+    } = req.body.bookingData;
 
     if (!mail || !validateEmail(mail)) return res.status(400).json({ error: "Invalid email address" });
     const session = await mongoose.startSession();
