@@ -134,7 +134,7 @@ const createEndUser = async (req, res) => {
   try {
     console.log("check............");
     console.log(req.body);
-    const { name, mail, password, mob } = req.body;
+    const { name, mail, password, mob } = req.body.values;
     console.log(name);
     const existedUser = await User.findOne({
         mail }
@@ -345,7 +345,7 @@ function sendVerificationEmail(user) {
 
 const login = async (req, res) => {
   try {
-    const { mail, password } = req.body;
+    const { mail, password } = req.body.values;
     const user = await User.findOne({ mail });
     if (!user) {
       return res.status(404).json({ error: "User not found" });

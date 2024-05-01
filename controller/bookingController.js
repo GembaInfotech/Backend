@@ -223,7 +223,7 @@ const createPaymentLink = async (req, res) => {
       
       const order = await Booking.findById(req.params.id);
       const paymentLinkRequest = {
-        amount:  100000,
+        amount:  2400,
         currency: 'INR',
        
        
