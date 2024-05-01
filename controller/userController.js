@@ -298,33 +298,28 @@ function sendVerificationEmail(user) {
     to: user.mail,
     subject: "Parkar-Verify Your Email",
     html: `<!DOCTYPE html>
-      <html lang="en">
-      
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title> Account Verification </title>
-          <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-      </head>
-      
-      <body class="bg-gray-100">
-          <div class="max-w-screen-lg mx-auto mt-8">
-              <!-- Dummy Image Section -->
-              <div className="flex justify-center ">
-                  <img src="https://via.placeholder.com/300" alt="Dummy Image" class="mx-auto" width="50" height = "50"  >
-              </div>
-      
-              <!-- Content Section -->
-              <div class="bg-white shadow-md rounded-lg px-8 py-6 mt-8">
-                  <h1 class="text-gray-800 text-lg font-semibold">Welcome ${user.name}</h1>
-                  <p class="text-gray-700 mt-2">Thank you for creating an account with Parkar. </p>
-                  <p>Please click the link below to activate your account.</p>
-                  <a href="https://backend-2-v1ta.onrender.com/v1/api/User/token/${user.verificationToken}" class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">Activate Account</a>
-              </div>
-          </div>
-      </body>
-      
-      </html>
+    <html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    </head>
+    
+    <body class="bg-gray-100">
+        <div class="max-w-screen-lg mx-auto mt-8">
+            <div class="bg-white shadow-md rounded-lg px-8 py-6 mt-8">
+                <h5 class="text-gray-800 text-sm">Welcome ${user.name}</h5>
+                <p class="text-gray-700 mt-2">Thank you for creating an account with Parkar. </p>
+                <p>Please click the link below to activate your account.</p>
+                <a href="https://backend-2-v1ta.onrender.com/v1/api/User/token/${user.verificationToken}"
+                    class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">Activate
+                    Account</a>
+            </div>
+        </div>
+    </body>
+    
+    </html>
       `,
 
       
