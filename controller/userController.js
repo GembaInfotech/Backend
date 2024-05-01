@@ -309,7 +309,7 @@ function sendVerificationEmail(user) {
     <body class="bg-gray-100">
         <div class="max-w-screen-lg mx-auto mt-8">
             <div class="bg-white shadow-md rounded-lg px-8 py-6 mt-8">
-                <h5 class="text-gray-800 text-sm">Welcome ${user.name}</h5>
+                <h3 class="text-gray-800 text-sm">Welcome ${user.name}</h3>
                 <p class="text-gray-700 mt-2">Thank you for creating an account with Parkar. </p>
                 <p>Please click the link below to activate your account.</p>
                 <a href="https://backend-2-v1ta.onrender.com/v1/api/User/token/${user.verificationToken}"
