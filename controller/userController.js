@@ -6,7 +6,7 @@ import crypto from "crypto";
 import { request } from "http";
 import { log } from "console";
 
-import UserAVTemplate from "../../emailTemplates/UserAccountVerification.js";
+import UserAVTemplate from "../../emailTemplates/UserAccountVerification.mjs";
 import sendVerificationEmail from "../utils/nodemailer.js";
 
 
@@ -136,7 +136,7 @@ const createEndUser = async (req, res) => {
   try {
     console.log("check............");
     console.log(req.body);
-    const { name, mail, password, mob } = req.body.values;
+    const { name, mail, password, mob } = req.body;
     console.log(name);
     const existedUser = await User.findOne({
         mail }
@@ -159,7 +159,8 @@ const createEndUser = async (req, res) => {
     console.log("data", data);
     await data.save();
     console.log("dfghjk");
-    sendVerificationEmail(data, UserAVTemplate.replace('%NAME%', data.name));
+    sendVerificationEmail(data, UserAVTemplate.replace('%NAME%', data.name).replace(' %userVerificationToken%', data.verificationToken));
+   
     // sendVerificationEmail(data);
     console.log("dsfghjjhgf");
     res.status(201).json({ message: "User created. Verification email sent." });
