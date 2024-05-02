@@ -6,6 +6,8 @@ import crypto from "crypto";
 import { request } from "http";
 import { log } from "console";
 
+import UserAVTemplate from "../../emailTemplates/UserAccountVerification.js";
+import sendVerificationEmail from "../utils/nodemailer.js";
 
 
 
@@ -157,7 +159,8 @@ const createEndUser = async (req, res) => {
     console.log("data", data);
     await data.save();
     console.log("dfghjk");
-    sendVerificationEmail(data);
+    sendVerificationEmail(data, UserAVTemplate.replace('%NAME%', data.name));
+    // sendVerificationEmail(data);
     console.log("dsfghjjhgf");
     res.status(201).json({ message: "User created. Verification email sent." });
   } catch (error) {
@@ -291,51 +294,51 @@ const transporter = nodemailer.createTransport({
     pass: "qqjsatrjwvbynknu",
   },
 });
-function sendVerificationEmail(user) {
-  console.log("", user )
-  const mailOptions = {
-    from: "prashantrana9516@gmail.com",
-    to: user.mail,
-    subject: "Parkar-Verify Your Email",
-    html: `<!DOCTYPE html>
-    <html lang="en">
+// function sendVerificationEmail(user) {
+//   console.log("", user )
+//   const mailOptions = {
+//     from: "prashantrana9516@gmail.com",
+//     to: user.mail,
+//     subject: "Parkar-Verify Your Email",
+//     html: `<!DOCTYPE html>
+//     <html lang="en">
     
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    </head>
+//     <head>
+//         <meta charset="UTF-8">
+//         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+//     </head>
     
-    <body class="bg-gray-100">
-        <div class="max-w-screen-lg mx-auto mt-8">
-            <div class="bg-white shadow-md rounded-lg px-8 py-6 mt-8">
-                <h3 class="text-gray-800 text-sm">Welcome ${user.name}</h3>
-                <p class="text-gray-700 mt-2">Thank you for creating an account with Parkar. </p>
-                <p>Please click the link below to activate your account.</p>
-                <a href="https://backend-2-v1ta.onrender.com/v1/api/User/token/${user.verificationToken}"
-                    class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">Activate
-                    Account</a>
-            </div>
-        </div>
-    </body>
+//     <body class="bg-gray-100">
+//         <div class="max-w-screen-lg mx-auto mt-8">
+//             <div class="bg-white shadow-md rounded-lg px-8 py-6 mt-8">
+//                 <h3 class="text-gray-800 text-sm">Welcome ${user.name}</h3>
+//                 <p class="text-gray-700 mt-2">Thank you for creating an account with Parkar. </p>
+//                 <p>Please click the link below to activate your account.</p>
+//                 <a href="https://backend-2-v1ta.onrender.com/v1/api/User/token/${user.verificationToken}"
+//                     class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">Activate
+//                     Account</a>
+//             </div>
+//         </div>
+//     </body>
     
-    </html>
-      `,
+//     </html>
+//       `,
 
       
-  };
+//   };
 
-  console.log("email testing");
+//   console.log("email testing");
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    console.log("testing....");
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Email sent: " + info.response);
-    }
-  });
-}
+//   transporter.sendMail(mailOptions, (error, info) => {
+//     console.log("testing....");
+//     if (error) {
+//       console.log(error);
+//     } else {
+//       console.log("Email sent: " + info.response);
+//     }
+//   });
+// }
 
 
 const login = async (req, res) => {
